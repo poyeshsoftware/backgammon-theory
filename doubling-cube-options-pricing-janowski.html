@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Continuous Financial Options Pricing, Janowski Match Equity Formulas, and Doubling Cube Economics</title>
+  <meta name="description" content="A mathematical exploration of the doubling cube as an American call option, volatility drag, Janowski match equity formulas, and asymmetric risk in competitive backgammon.">
+  <link rel="canonical" href="https://poyeshsoftware.github.io/backgammon-theory/doubling-cube-options-pricing-janowski.html">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --heading: #f0f6fc;
+      --accent: #58a6ff;
+      --muted: #8b949e;
+      --code-bg: #0d1117;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
+      margin-bottom: 40px;
+    }
+    h1 {
+      color: var(--heading);
+      font-size: 2.3rem;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    h2 {
+      color: var(--heading);
+      font-size: 1.5rem;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    h3 {
+      color: var(--heading);
+      font-size: 1.2rem;
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+    p {
+      margin-bottom: 20px;
+    }
+    code {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.9em;
+      color: #79c0ff;
+    }
+    pre {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+    pre code {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      color: #e6edf3;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ul, ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    blockquote {
+      border-left: 4px solid var(--accent);
+      margin: 0 0 20px 0;
+      padding: 8px 16px;
+      background-color: var(--card-bg);
+      color: var(--muted);
+    }
+    footer {
+      margin-top: 60px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav style="margin-bottom: 20px; font-size: 0.95rem;">
+      <a href="./" style="margin-right: 16px;">Stochastic State Trees</a>
+      <a href="absorbing-markov-chains-bearoff-solvers.html" style="margin-right: 16px;">Absorbing Markov Chains</a>
+      <a href="doubling-cube-options-pricing-janowski.html" style="font-weight: bold; ">Doubling Cube Economics</a>
+    </nav>
+    <h1>Continuous Financial Options Pricing, Janowski Match Equity Formulas, and Doubling Cube Economics</h1>
+    <div class="meta">Peyman Ghaderkourehpaz · October 6, 2026 · Research Monograph</div>
+  </header>
+  <main>
+
+    <p>The introduction of the doubling cube in the mid-1920s transformed backgammon from an ancient game of arithmetic checker racing into one of the most intellectually demanding laboratories for decision theory, quantitative finance, and applied probability. Prior to the cube, backgammon suffered from structural monotony during lopsided games: once a player established a decisive positional lead, both participants were compelled to play out dozens of trivial moves to reach an inevitable conclusion.</p>
+
+    <p>The doubling cube revolutionized this dynamic by creating a continuous economic market for game equity. In this monograph, we examine the formal mathematics of doubling decisions. We demonstrate that ownership of the doubling cube is isomorphic to holding an American financial call option with stochastic volatility. We analyze the derivation of the classical 25% take point in money play, formulate Rick Janowski's match equity equations, and dissect structural match play anomalies including the Crawford rule and post-Crawford free drops.</p>
+
+    <h2>1. The Microeconomics of Money Play: Derivation of the 25% Take Point</h2>
+    <p>To establish the baseline mathematics of doubling cube economics, consider an unconstrained game of money play where each point has constant marginal utility. Suppose Player A reaches an advantageous position and offers a double, turning the cube from stake $C$ to $2C$.</p>
+
+    <p>Player B faces a binary decision:</p>
+    <ul>
+      <li><strong>Drop (Pass):</strong> Player B concedes immediately. The payoff is deterministic:
+        <pre><code>Payoff(Drop) = -C</code></pre>
+      </li>
+      <li><strong>Take (Accept):</strong> Player B agrees to continue playing at stake $2C$. Let $p \in [0, 1]$ denote Player B's objective probability of winning the game from the current position. Assuming neither side can redouble (a "dead cube" assumption), the expected payoff is:
+        <pre><code>E[Payoff(Take)] = p * (+2C) + (1 - p) * (-2C) = 4Cp - 2C</code></pre>
+      </li>
+    </ul>
+
+    <p>By the axiom of expected value maximization, Player B should accept the double if and only if the expected value of taking is greater than or equal to the cost of dropping:</p>
+    <pre><code>E[Payoff(Take)] ≥ Payoff(Drop)
+4Cp - 2C ≥ -C
+4Cp ≥ C
+p ≥ 1/4 = 25.0%</code></pre>
+
+    <p>This fundamental derivation establishes the celebrated <strong>25% Rule</strong>. If Player B's probability of winning exceeds 25%, taking the cube yields a higher long-term expected value than surrendering one point immediately, even though Player B expects to lose 75% of such games. In economic terms, accepting a double is an exercise in loss minimization: losing an average of $-0.90$ points per game is strictly preferable to forfeiting $-1.00$ points.</p>
+
+    <h2>2. The Doubling Cube as an American Call Option: Live Cube Dynamics</h2>
+    <p>The classical 25% derivation assumes a "dead cube"—a condition where the cube cannot be turned again. In actual gameplay, accepting a double confers an immense strategic asset: <em>exclusive ownership of the doubling cube</em>. Under the rules of backgammon, once Player B accepts Player A's double, Player A cannot double again until Player B has first redoubled.</p>
+
+    <p>In quantitative finance, an American call option grants the holder the right, but not the obligation, to exercise a contract at any point prior to expiration. In backgammon, cube ownership is an American call option on the game's volatility:</p>
+    <ul>
+      <li>If the game continues to deteriorate for Player B, Player B simply never exercises the option, maintaining the stake at $2C$.</li>
+      <li>If the game swings favorably (due to lucky dice or opponent blunders) and Player B's winning probability surges to $75\%+$, Player B can exercise their option by redoubling to $4C$, forcing Player A into the same drop-or-take dilemma.</li>
+    </ul>
+
+    <p>Because ownership of the cube possesses non-zero financial option value $O(v) > 0$, Player B's true break-even winning probability is not 25%, but depends heavily on the position's <strong>volatility</strong>:</p>
+    <pre><code>p_take_live = p_dead - O(volatility)</code></pre>
+
+    <p>In low-volatility positions (such as sterile, disengaged bearoff races where dice rolls produce smooth, predictable movements), the option value is minimal ($O(v) pprox 0.01$), keeping the take point around $24\%–25\%$. Conversely, in high-volatility positions (such as complex back games or mutual blitzes with multiple blots on the bar), wild equity swings are frequent. The live cube option is exceptionally valuable, pushing Player B's break-even take threshold down to $21\%–22\%$.</p>
+
+    <h2>3. Match Play Dynamics and the Non-Linearity of Match Equity</h2>
+    <p>While money play features constant marginal utility, tournament backgammon is conducted under match play rules: two players compete to reach a fixed target score $M$ (e.g., a 7-point or 11-point match). In match play, points are not fungible with cash; their value is governed entirely by <strong>Match Equity</strong> ($ME$).</p>
+
+    <p>Let $d_A = M - 	ext{score}_A$ and $d_B = M - 	ext{score}_B$ represent the points "away" from victory for Player A and Player B. The Match Equity $ME(d_A, d_B)$ is defined as the objective probability that Player A will win the overall match from the current score state $(d_A, d_B)$.</p>
+
+    <p>Because match equity is bounded within $[0, 1]$, the marginal value of winning a point is highly non-linear:</p>
+    <ul>
+      <li>At score $(1	ext{-away}, 2	ext{-away})$, winning 1 point for the leader increases match equity from $70\%$ to $100\%$ ($\Delta ME = +30\%$).</li>
+      <li>At score $(5	ext{-away}, 5	ext{-away})$, winning 1 point increases match equity from $50\%$ to $59\%$ ($\Delta ME = +9\%$).</li>
+    </ul>
+
+    <p>Modern engines utilize precomputed Match Equity Tables (such as the Rockwell-Kazaross or Woolsey MET) to translate raw in-game probabilities into overall match equity deltas.</p>
+
+    <h2>4. Janowski's Mathematical Formulas for Doubling Decisions</h2>
+    <p>In 1993, mathematician and theorist Rick Janowski published a landmark analytical framework relating a position's continuous winning probability $p$, its gammon rates, and its match equity deltas to determine optimal doubling thresholds.</p>
+
+    <p>Let:</p>
+    <ul>
+      <li>$p$: Probability that the doubling player (Player A) wins the game.</li>
+      <li>$g_1$: Probability that Player A wins a gammon, given that Player A wins.</li>
+      <li>$g_2$: Probability that Player B wins a gammon, given that Player B wins.</li>
+      <li>$W, L$: The match equities resulting from winning or losing the game at the current cube level.</li>
+      <li>$W_g, L_g$: The match equities resulting from gammon outcomes.</li>
+    </ul>
+
+    <p>Janowski derived the analytical boundaries of the <strong>Doubling Window</strong> $[D_{	ext{min}}, D_{	ext{max}}]$:</p>
+
+    <h3>The Take Point ($D_{	ext{max}}$)</h3>
+    <p>Player B's take threshold occurs where the match equity of taking equals the match equity of dropping:</p>
+    <pre><code>ME(Drop) = ME(score after losing 1 pt)
+ME(Take) = (1 - p) * ME(Win) + p * ME(Loss) + gammon_penalties</code></pre>
+    <p>Solving for the critical probability $p_{	ext{take}}$ yields Janowski's formula:</p>
+    <pre><code>p_take = (ME(Drop) - ME(Loss) + gammon_adjustment) / (ME(Win) - ME(Loss) + gammon_adjustment)</code></pre>
+
+    <h3>The Doubling Point ($D_{	ext{min}}$)</h3>
+    <p>Player A should double only when the equity of doubling exceeds the equity of holding the cube centered. If Player A doubles too early, they surrender cube leverage for zero immediate benefit. The minimum doubling point is defined by:</p>
+    <pre><code>D_min = p_take - (Option_Value / (2 * Volatility_Factor))</code></pre>
+
+    <h3>The "Too Good to Double" Criterion</h3>
+    <p>When Player A's position is overwhelmingly dominant and possesses high gammon potential, doubling is an error! If Player A doubles, Player B will rationally drop, conceding exactly 1 point. However, if Player A rolls on undoubled, Player A may score a gammon, winning 2 points. Player A is "too good to double" whenever:</p>
+    <pre><code>E[Play On] = 1.0 * p_single + 2.0 * p_gammon &gt; 1.0 (Value of Opponent Dropping)
+p_gammon &gt; (1.0 - p_win)</code></pre>
+
+    <h2>5. Match Asymmetries: The Crawford Rule and Free Drops</h2>
+    <p>Match play introduces severe game-theoretic boundary anomalies that do not exist in continuous financial markets, codified primarily in the Crawford Rule.</p>
+
+    <h3>The Crawford Rule</h3>
+    <p>Devised by John R. Crawford in the 1930s, the rule states that when one player reaches match point (exactly 1 point away from victory), the doubling cube is entirely prohibited for the immediately following game. Without the Crawford rule, the trailing player would double on the first roll of every game with zero risk (since losing 1 point or 2 points is identical when the opponent needs only 1 point), completely destroying the leader's earned advantage.</p>
+
+    <h3>Post-Crawford Dynamics and the "Free Drop"</h3>
+    <p>Once the Crawford game has concluded, if the match has not ended, the doubling cube is restored. This creates radical game-theoretic asymmetries:</p>
+    <ul>
+      <li><strong>Mandatory Trailing Double:</strong> The trailing player must double at the earliest legal opportunity. Because the leader needs only 1 point, increasing the stakes carries zero marginal downside for the trailer, while forcing the leader to defend higher stakes.</li>
+      <li><strong>The Leader's Free Drop:</strong> If the trailing player is an even number of points away (e.g. 2-away or 4-away), the leader possesses a "free drop." Conceding 1 point moves the score from 2-away to 1-away (still requiring the trailer to win another game), without altering the leader's distance to victory. The leader can therefore reject doubles in dubious positions without penalty.</li>
+    </ul>
+
+    <h2>6. Computational Execution in Modern Engines</h2>
+    <p>In modern backgammon software architectures, doubling cube decisions are adjudicated through a three-stage pipeline:</p>
+    <ol>
+      <li><strong>Neural Inference:</strong> The engine queries its neural network value head to obtain the 5-vector outcome distribution $(p_w, p_{wg}, p_{wbg}, p_{lg}, p_{lbg})$.</li>
+      <li><strong>MET Interpolation:</strong> The engine maps these continuous probabilities against the match equity table, accounting for score deltas, cube ownership, and Crawford status.</li>
+      <li><strong>Threshold Comparison:</strong> The computed equity of doubling, redoubling, taking, and dropping are compared. If the equity difference exceeds a parameterized margin ($\Delta \ge 0.010$), the engine issues an unambiguous game-theoretic directive: <em>No Double, Double/Take, Double/Pass, or Too Good</em>.</li>
+    </ol>
+
+    <p>Through this elegant integration of financial option theory, dynamic programming, and match equity mathematics, modern backgammon engines achieve flawless decision-making across one of the most volatile probability landscapes in computational game theory.</p>
+
+  </main>
+  <footer>
+    <p>&copy; 2026 Poyesh Software Research · Open Source Game Theory &amp; Systems Engineering Monographs</p>
+  </footer>
+</body>
+</html>

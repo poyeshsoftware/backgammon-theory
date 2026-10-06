@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stochastic State Trees, Expectiminimax Horizons, and Cryptographic Commit-Reveal Dice Protocols in Modern Backgammon Engines</title>
+  <meta name="description" content="A rigorous computer science and applied cryptographic analysis of expectiminimax game trees, neural value functions, star-pruning, and zero-trust commit-reveal dice protocols in backgammon.">
+  <link rel="canonical" href="https://poyeshsoftware.github.io/backgammon-theory/">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --heading: #f0f6fc;
+      --accent: #58a6ff;
+      --muted: #8b949e;
+      --code-bg: #0d1117;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
+      margin-bottom: 40px;
+    }
+    h1 {
+      color: var(--heading);
+      font-size: 2.3rem;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    h2 {
+      color: var(--heading);
+      font-size: 1.5rem;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    h3 {
+      color: var(--heading);
+      font-size: 1.2rem;
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+    p {
+      margin-bottom: 20px;
+    }
+    code {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.9em;
+      color: #79c0ff;
+    }
+    pre {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+    pre code {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      color: #e6edf3;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ul, ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    blockquote {
+      border-left: 4px solid var(--accent);
+      margin: 0 0 20px 0;
+      padding: 8px 16px;
+      background-color: var(--card-bg);
+      color: var(--muted);
+    }
+    footer {
+      margin-top: 60px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav style="margin-bottom: 20px; font-size: 0.95rem;">
+      <a href="./" style="font-weight: bold; margin-right: 16px;">Stochastic State Trees</a>
+      <a href="absorbing-markov-chains-bearoff-solvers.html" style="margin-right: 16px;">Absorbing Markov Chains</a>
+      <a href="doubling-cube-options-pricing-janowski.html" style="">Doubling Cube Economics</a>
+    </nav>
+    <h1>Stochastic State Trees, Expectiminimax Horizons, and Cryptographic Commit-Reveal Dice Protocols in Modern Backgammon Engines</h1>
+    <div class="meta">Peyman Ghaderkourehpaz · October 6, 2026 · Research Monograph</div>
+  </header>
+  <main>
+
+    <p>Among classical zero-sum games of two players, backgammon occupies a uniquely sophisticated position at the intersection of combinatorial game theory, dynamic programming, reinforcement learning, and applied cryptography. Unlike purely deterministic perfect-information games such as chess and checkers—where the game tree expands strictly through alternating decision nodes—backgammon is an imperfectly controllable, stochastic extensive-form game of perfect information. Every turn introduces stochastic chance nodes governed by the discrete probability distribution of two independent six-sided dice.</p>
+
+    <p>This architectural duality introduces severe computational hurdles: the state tree does not merely branch based on tactical moves, but explodes through a multiplicative convolution of stochastic dice distributions and high-cardinality checker trajectories. In this monograph, we formalize the mathematical topology of backgammon's stochastic state tree, examine the limitations of expectiminimax pruning, analyze the role of temporal difference neural networks, and resolve the fundamental epistemological problem of distributed digital play through provably fair cryptographic commit-reveal protocols.</p>
+
+    <h2>1. Combinatorial State Topology and the Expectiminimax Game Tree</h2>
+    <p>To analyze the computational complexity of backgammon, we formalize the board configuration and state space. A complete backgammon state $s$ is defined by a tuple:</p>
+    <pre><code>s = (p_1, p_2, ..., p_24, b_w, b_b, o_w, o_b, cube_val, cube_owner, turn)</code></pre>
+    <p>where $p_i \in \{-15, \dots, +15\}$ encodes the checker occupancy of the 24 board points (positive for white, negative for black), $b_w, b_b$ represent checkers on the bar, $o_w, o_b$ denote borne-off checkers, and cube attributes govern doubling dynamics. Constrained by the total invariant of 15 checkers per side ($\sum |p_i| + b + o = 15$), the total number of distinct legal board configurations is bounded by approximately $10^{20}$.</p>
+
+    <p>However, game-tree complexity is dominated by the stochastic chance branching factor. Consider a standard turn. Before a player can select a checker maneuver, nature evaluates a chance node with 36 equiprobable microstates $(\omega_1, \omega_2) \in \{1, \dots, 6\}^2$. Because dice are unordered in physical play, these microstates collapse into 21 distinct macro-outcomes:</p>
+    <ul>
+      <li><strong>6 Double Rolls:</strong> $(1-1, 2-2, 3-3, 4-4, 5-5, 6-6)$, each occurring with probability $P(	ext{double}) = rac{1}{36}$. Crucially, doubles grant four identical moves rather than two.</li>
+      <li><strong>15 Non-Double Rolls:</strong> $(i, j)$ with $i 
+eq j$, each occurring with permutation symmetry probability $P(	ext{non-double}) = rac{2}{36} = rac{1}{18} pprox 0.0556$.</li>
+    </ul>
+
+    <p>Following the realization of roll $r \in \Omega$, the player faces a decision node. Depending on checker dispersion, contact density, and bar re-entries, the legal move set $M(s, r)$ ranges from 0 (completely blocked) to upwards of 80 distinct permutations, with an empirical mean branching factor of $ar{b} pprox 20$. Consequently, an expectiminimax expansion of depth $d$ plies does not follow the classical minimax scaling $O(b^d)$, but rather:</p>
+    <pre><code>Nodes(d) = O((|Ω| * b_avg)^(d/2)) = O((21 * 20)^(d/2)) ≈ O(420^(d/2))</code></pre>
+    <p>At a lookahead of just 2 full turns (4 plies: Chance $	o$ Max $	o$ Chance $	o$ Min), the engine must traverse approximately $(420)^2 = 1.76 	imes 10^5$ leaf states. At 6 plies, exhaustive evaluation requires traversing over $7.4 	imes 10^7$ nodes. This explosive branching makes deep full-width search computationally infeasible in real time.</p>
+
+    <h2>2. Expectiminimax Horizons and Star-Pruning Inefficiencies</h2>
+    <p>In deterministic games, alpha-beta pruning optimizes search efficiency from $O(b^d)$ down to $O(b^{d/2})$ by establishing strict bounds $[lpha, eta]$ on minimax values. In stochastic games, the expectiminimax algorithm evaluates chance nodes via weighted expectations:</p>
+    <pre><code>V(s) = max_{m ∈ M(s, r)} V(apply(s, m))          [Decision Node]
+V(s_chance) = ∑_{r ∈ Ω} P(r) * V(s_chance, r)       [Chance Node]</code></pre>
+
+    <p>Pruning a chance node is fundamentally more difficult than pruning an alternating decision node. Because the value of a chance node is an arithmetic mean rather than an extremum ($\max$ or $\min$), a single unexamined branch with high probability or extreme payoff can shift the expected value across the pruning threshold. Bruce Ballard (1983) formalized the <strong>Star-1 (*1)</strong> and <strong>Star-2 (*2)</strong> pruning algorithms, which establish mathematical bounds on the maximum possible contribution of unvisited chance outcomes:</p>
+    <pre><code>// Star-Pruning Chance Node Condition
+let current_sum = ∑_{i=1}^k P(r_i) * V(s, r_i);
+let max_remaining = (1 - ∑_{i=1}^k P(r_i)) * V_upper_bound;
+if (current_sum + max_remaining &lt; alpha) return PRUNE;</code></pre>
+
+    <p>While star-pruning provides theoretical guarantees, its asymptotic pruning efficacy in backgammon is severely constrained because evaluation functions are bounded within continuous equity intervals $[-3.0, +3.0]$, preventing deep cutoffs. As a result, high-performance backgammon engines do not rely on deep full-width expectiminimax trees. Instead, they leverage shallow 2-ply or 3-ply truncated searches informed by continuous neural network value functions.</p>
+
+    <h2>3. Neural Value Functions and Temporal Difference Learning</h2>
+    <p>The historical breakthrough in backgammon computation occurred through Gerald Tesauro's TD-Gammon (1992), which replaced handcrafted heuristic weights with multi-layer perceptrons trained via Temporal Difference learning ($TD(\lambda)$). Modern state-of-the-art engines (including gnubg and the wildbg neural engine) expand this paradigm using deep residual architectures.</p>
+
+    <p>Rather than evaluating a single scalar win/loss score, the neural network emits a 5-dimensional probability vector:</p>
+    <pre><code>Y(s) = (p_w, p_wg, p_wbg, p_lg, p_lbg) ∈ [0, 1]^5</code></pre>
+    <p>where $p_w$ is the probability of White winning, $p_{wg}$ is White winning a gammon (double points), $p_{wbg}$ is White winning a backgammon (triple points), $p_{lg}$ is Black winning a gammon, and $p_{lbg}$ is Black winning a backgammon. Under standard money play rules, the expected equity $E(s)$ is computed directly as:</p>
+    <pre><code>E(s) = 2*p_w - 1 + (p_wg - p_lg) + (p_wbg - p_lbg)</code></pre>
+
+    <p>During a 2-ply search, the engine evaluates candidate moves by generating all legal moves for the rolled dice, simulating all 21 respondent dice rolls for each resulting configuration, querying the neural network at the leaves, and computing the expectiminimax equity. Moves are ordered by equity loss (error metric in millipoints, where $1.000$ equity equals 1 point).</p>
+
+    <h2>4. The Dice Trust Problem in Distributed Digital Architectures</h2>
+    <p>While the mathematical formulation of game trees and neural evaluation is theoretically complete, the deployment of competitive backgammon across distributed networks exposes a critical architectural vulnerability: <em>the epistemological integrity of the random number generator</em>.</p>
+
+    <p>In physical backgammon, both players utilize physical dice cups, precision-milled dice with flush pips, and baffled dice towers to enforce physical entropy and prevent sleight-of-hand. In contrast, online backgammon has historically suffered from widespread player distrust. When a player suffers a low-probability bad beat (such as an opponent rolling consecutive $6-6$ or $5-5$ to hit a lone blot on the bar), the victim inevitably suspects the platform's PRNG is rigged to artificially prolong matches, boost house rake, or favor paying subscribers.</p>
+
+    <p>A closed-source server PRNG—even one utilizing high-entropy cryptographic sources like Linux <code>/dev/urandom</code> or hardware TRNGs—cannot provide verifiable proof of impartiality to a remote client. Conversely, allowing the client to generate its own dice invites trivial memory inspection and packet manipulation. Therefore, a production architecture requires an applied cryptographic protocol that guarantees zero-trust fairness.</p>
+
+    <h2>5. Provably Fair Cryptographic Commit-Reveal Protocol</h2>
+    <p>To eliminate reliance on institutional trust, modern server-authoritative engines implement a cryptographic commit-reveal scheme based on SHA-256 and HMAC-SHA256 primitives. Under this scheme, neither the server nor the client possesses the ability to predict or manipulate future dice rolls unilaterally.</p>
+
+    <p>The protocol operates across four distinct phases for each game or match:</p>
+
+    <h3>Phase 1: Server Entropy Commitment</h3>
+    <p>Prior to the initiation of the match, the server generates a 256-bit cryptographically secure random secret seed $S_{server} \leftarrow_R \{0, 1\}^{256}$ and an associated unique match identifier $M_{id}$. The server computes a cryptographic commitment hash using SHA-256:</p>
+    <pre><code>Commitment = SHA-256(S_server || M_id || Nonce_server)</code></pre>
+    <p>The server transmits <code>Commitment</code> to the client over an encrypted WebSocket or HTTPS connection. Because SHA-256 is computationally preimage-resistant, the client cannot derive $S_{server}$ from the commitment, yet the server is permanently bound to this seed.</p>
+
+    <h3>Phase 2: Client Seed Injection</h3>
+    <p>Upon receiving the commitment, the client generates its own independent 256-bit entropy seed $S_{client} \leftarrow_R \{0, 1\}^{256}$ and a client nonce $N_c$. This seed may be generated from browser Web Crypto primitives (<code>window.crypto.getRandomValues</code>) or explicitly customized by the user. The client transmits $S_{client}$ to the server.</p>
+
+    <h3>Phase 3: Deterministic Roll Derivation</h3>
+    <p>For each ply $k \in \{1, 2, \dots\}$ throughout the match, the authoritative game state machine derives the dice roll by evaluating an HMAC-SHA256 pseudo-random function using the server secret as the HMAC key:</p>
+    <pre><code>Entropy_k = HMAC-SHA256(Key = S_server, Message = S_client || ":" || M_id || ":" || k)</code></pre>
+    <p>The 256-bit output hash is sliced into 32-bit big-endian unsigned integers to derive the two dice faces using rejection sampling to guarantee perfect uniform distribution across $\{1, \dots, 6\}$ without modulo bias:</p>
+    <pre><code>uint32_t val1 = extract_u32(Entropy_k, 0);
+uint32_t val2 = extract_u32(Entropy_k, 4);
+
+// Rejection sampling against the largest multiple of 6 below 2^32
+const uint32_t LIMIT = 4294967292U; // 6 * 715827882
+while (val1 &gt;= LIMIT) { val1 = rehash_u32(val1); }
+while (val2 &gt;= LIMIT) { val2 = rehash_u32(val2); }
+
+die_1 = (val1 % 6) + 1;
+die_2 = (val2 % 6) + 1;</code></pre>
+
+    <h3>Phase 4: Post-Match Verification and Verification Audits</h3>
+    <p>At the conclusion of the game, the server transmits the plaintext $S_{server}$ to the client. The client independently executes two mathematical verifications:</p>
+    <ol>
+      <li><strong>Commitment Integrity:</strong> Computes <code>SHA-256(S_server || M_id || Nonce_server)</code> and asserts strict identity against the pre-match <code>Commitment</code> hash. If the hashes differ, the server altered its seed mid-game, proving tampering.</li>
+      <li><strong>Deterministic Replay:</strong> Recomputes the entire sequence of dice rolls across all plies $k$ using $S_{server}$ and $S_{client}$. Every roll observed during gameplay must match the cryptographic derivation exactly.</li>
+    </ol>
+
+    <p>As formalized in production platforms such as <a href="https://boardgammon.com/fair-dice/">Provably Fair Backgammon Dice — How Commit-Reveal Works</a>, this cryptographic decoupling guarantees that even if the server had complete knowledge of neural network value tables, it could not steer dice outcomes because the client's entropy seed independently randomizes the HMAC message space.</p>
+
+    <h2>6. Architectural Synthesis: The Modern Backgammon Engine</h2>
+    <p>Modern backgammon engines represent a rare convergence of computational disciplines. At the foundation, combinatorial state trees require compact 128-bit bitboard representations and star-pruning expectiminimax search. At the cognitive layer, temporal difference learning and deep neural networks provide superhuman position evaluation across non-linear equity surfaces. Finally, at the networking and integrity layer, cryptographic commit-reveal protocols eliminate human suspicion, establishing an unshakeable mathematical foundation for competitive online play.</p>
+
+  </main>
+  <footer>
+    <p>&copy; 2026 Poyesh Software Research · Open Source Game Theory &amp; Systems Engineering Monographs</p>
+  </footer>
+</body>
+</html>
